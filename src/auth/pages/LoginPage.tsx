@@ -12,7 +12,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { Validator, useForm } from "../../hooks";
 import { FormEvent, useMemo, useState } from "react";
 import { useAppDispatch } from "../../store";
-import { googleLoginAsync, loginAsync } from "../../store/auth/thunks";
+import { googleLoginAsync, loginAsync } from "../../store/auth/auth.thunks";
 import { useAppSelector } from "../../store/hooks/useAppSelector.hook";
 import { AuthLogin } from "../models/auth.model";
 

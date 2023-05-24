@@ -12,7 +12,7 @@ import { Validator, useForm } from "../../hooks";
 import { FormEvent, useMemo, useState } from "react";
 import { AuthRegister } from "../models";
 import { useAppDispatch } from "../../store";
-import { registerAsync } from "../../store/auth/thunks";
+import { registerAsync } from "../../store/auth/auth.thunks";
 import { useAppSelector } from "../../store/hooks/useAppSelector.hook";
 
 const formData = {

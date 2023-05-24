@@ -1,4 +1,4 @@
-import { AppDispatch, UserInfo } from "../";
+import { AppDispatch, UserInfo } from "..";
 import { authFailure, authStarted, login, logout } from "./auth.slice";
 import {
   registerWithEmailAndPassword,
