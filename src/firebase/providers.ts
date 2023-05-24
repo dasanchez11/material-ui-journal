@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
+  signOut,
 } from "firebase/auth";
 import { FirebaseAuth } from "./config";
 import { FirebaseError } from "@firebase/util";
@@ -21,7 +22,7 @@ export const signInWithEmail = async (email: string, password: string) => {
     return { ok: true, userInfo: { displayName, photoURL, uid, email } };
   } catch (error) {
     if (error instanceof FirebaseError) {
-      return { ok: false, message: error.message };
+      throw new Error(error.message);
     } else throw new Error("Unexpected Error ocurred");
   }
 };
@@ -38,11 +39,11 @@ export const registerWithEmailAndPassword = async (
       password
     );
     await updateProfile(result.user, { displayName });
-    const { photoURL, uid } = result.user;
+    const { photoURL = null, uid } = result.user;
     return { ok: true, userInfo: { displayName, photoURL, uid, email } };
   } catch (error) {
     if (error instanceof FirebaseError) {
-      return { ok: false, message: error.message };
+      throw new Error(error.message);
     } else throw new Error("Unexpected Error ocurred");
   }
 };
@@ -53,6 +54,17 @@ export const signInWithGoogle = async () => {
     // const credentials = GoogleAuthProvider.credentialFromResult(result);
     const { displayName, photoURL, uid, email } = result.user;
     return { ok: true, userInfo: { displayName, photoURL, uid, email } };
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      throw new Error(error.message);
+    } else throw new Error("Unexpected Error ocurred");
+  }
+};
+
+export const signOutFirebase = async () => {
+  try {
+    await signOut(FirebaseAuth);
+    return;
   } catch (error) {
     if (error instanceof FirebaseError) {
       throw new Error(error.message);

@@ -1,14 +1,24 @@
-import { Button, Grid, Link, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { AuthLayout } from "../layout/AuthLayout";
 import { Link as RouterLink } from "react-router-dom";
 import { Validator, useForm } from "../../hooks";
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { AuthRegister } from "../models";
+import { useAppDispatch } from "../../store";
+import { registerAsync } from "../../store/auth/thunks";
+import { useAppSelector } from "../../store/hooks/useAppSelector.hook";
 
 const formData = {
   password: "password",
-  email: "test@example.com",
-  displayName: "Example",
+  email: "diego@example.com",
+  displayName: "Diego",
 };
 
 const validationForm: Validator<AuthRegister> = {
@@ -24,6 +34,7 @@ const validationForm: Validator<AuthRegister> = {
 };
 
 export const RegisterPage = () => {
+  const dispatch = useAppDispatch();
   const {
     displayName,
     email,
@@ -37,9 +48,17 @@ export const RegisterPage = () => {
 
   const [submitted, setSubmitted] = useState(false);
 
+  const { status, errorMessage } = useAppSelector((state) => state.auth);
+
+  const isCheckingAuthentication = useMemo(
+    () => status === "checking",
+    [status]
+  );
+
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitted(true);
+    dispatch(registerAsync({ displayName, email, password }));
   };
 
   return (
@@ -93,8 +112,11 @@ export const RegisterPage = () => {
 
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
             <Grid item xs={12}>
+              {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+            </Grid>
+            <Grid item xs={12}>
               <Button
-                disabled={isFormValid}
+                disabled={!isFormValid || isCheckingAuthentication}
                 type="submit"
                 variant="contained"
                 fullWidth
