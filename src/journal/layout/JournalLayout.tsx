@@ -1,0 +1,22 @@
+import { Box, Toolbar } from "@mui/material";
+import { ReactNode } from "react";
+import { Navbar, Sidebar } from "../components";
+
+export interface JournalLayout {
+  children: ReactNode;
+}
+
+const drawerWidth = 240;
+
+export const JournalLayout = ({ children }: JournalLayout) => {
+  return (
+    <Box sx={{ display: "flex" }}>
+      <Navbar drawerWidth={drawerWidth} />
+      <Sidebar drawerWidth={drawerWidth} />
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toolbar />
+        {children}
+      </Box>
+    </Box>
+  );
+};
