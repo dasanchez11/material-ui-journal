@@ -24,6 +24,11 @@ const validationForm: Validator<AuthLogin> = {
   ],
 };
 
+const form = {
+  email: "diego@example.com",
+  password: "password",
+};
+
 export const LoginPage = () => {
   const dispatch = useAppDispatch();
   const [submitted, setSubmitted] = useState(false);
@@ -37,13 +42,7 @@ export const LoginPage = () => {
     emailValid,
     passwordValid,
     isFormValid,
-  } = useForm<AuthLogin>(
-    {
-      email: "diego@example.com",
-      password: "password",
-    },
-    validationForm
-  );
+  } = useForm<AuthLogin>(form, validationForm);
 
   const isAuthenticating = useMemo(() => status === "checking", [status]);
 

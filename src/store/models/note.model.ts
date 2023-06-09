@@ -11,4 +11,5 @@ export interface JournalState {
   messageSaved: string;
   notes: Note[];
   activeNote: null | string;
+  errors: string[] | null;
 }

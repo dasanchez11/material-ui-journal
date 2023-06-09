@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { TurnedInNot } from "@mui/icons-material";
 import { useAppSelector } from "../../store/hooks/useAppSelector.hook";
+import { SidebarItem } from "./SidebarItem";
 
 export interface SideBar {
   drawerWidth: number;
@@ -20,7 +21,7 @@ export interface SideBar {
 
 export const Sidebar = ({ drawerWidth = 240 }: SideBar) => {
   const { displayName } = useAppSelector((state) => state.auth);
-
+  const { notes } = useAppSelector((state) => state.journal);
   return (
     <Box
       component="nav"
@@ -42,20 +43,8 @@ export const Sidebar = ({ drawerWidth = 240 }: SideBar) => {
         <Divider />
 
         <List>
-          {["Enero", "Febrero", "Marzo", "Abril"].map((text) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  <TurnedInNot />
-                </ListItemIcon>
-                <Grid container>
-                  <ListItemText primary={text} />
-                  <ListItemText
-                    secondary={"Exercitation cillum irure elit consectetur."}
-                  />
-                </Grid>
-              </ListItemButton>
-            </ListItem>
+          {notes.map((note) => (
+            <SidebarItem key={note.id} note={note} />
           ))}
         </List>
       </Drawer>

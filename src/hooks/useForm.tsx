@@ -10,7 +10,7 @@ type CheckValues<T extends object> = {
 
 export const useForm = <T extends Object>(
   initialForm: T,
-  formValidations: Validator<T>
+  formValidations?: Validator<T>
 ) => {
   const [formState, setFormState] = useState<T>(initialForm);
   const [formValidation, setFormValidation] = useState<CheckValues<T>>(
@@ -21,7 +21,12 @@ export const useForm = <T extends Object>(
     createValidators();
   }, [formState]);
 
+  useEffect(() => {
+    setFormState(initialForm);
+  }, [initialForm]);
+
   const isFormValid = useMemo(() => {
+    if (!formValidation) return;
     for (const formValue of Object.keys(formValidation)) {
       if (formValidation[formValue as keyof typeof formValidation] !== null)
         return false;
@@ -39,14 +44,17 @@ export const useForm = <T extends Object>(
 
   const createValidators = () => {
     const formCheckedValues = {} as CheckValues<T>;
-
-    for (const formField of Object.keys(formValidations)) {
-      const [fn, errorMessage] = formValidations[formField as keyof T];
-      (formCheckedValues as any)[`${formField}Valid`] = fn(
-        formState[formField as keyof T] as string
-      )
-        ? null
-        : errorMessage;
+    for (const formField of Object.keys(initialForm)) {
+      if (!formValidations) {
+        (formCheckedValues as any)[`${formField}Valid`] = null;
+      } else {
+        const [fn, errorMessage] = formValidations[formField as keyof T];
+        (formCheckedValues as any)[`${formField}Valid`] = fn(
+          formState[formField as keyof T] as string
+        )
+          ? null
+          : errorMessage;
+      }
     }
     setFormValidation(formCheckedValues);
   };

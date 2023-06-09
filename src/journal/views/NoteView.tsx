@@ -1,8 +1,13 @@
 import { SaveOutlined } from "@mui/icons-material";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { ImageGallery } from "../components";
+import { Note } from "../../store/models/note.model";
+import { getCurrentDate } from "../../common/utils/date.utils";
+import { useForm } from "../../hooks";
 
-export const NoteView = () => {
+export const NoteView = ({ note }: { note: Note }) => {
+  const { title, body, date, onInputChange } = useForm<Note>(note);
+
   return (
     <Grid
       container
@@ -13,7 +18,12 @@ export const NoteView = () => {
     >
       <Grid item>
         <Typography fontSize={39} fontWeight="light">
-          28 de agosto, 2023
+          {getCurrentDate(new Date(date), {
+            weekday: "short",
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
         </Typography>
       </Grid>
       <Grid item>
@@ -31,6 +41,9 @@ export const NoteView = () => {
           placeholder="Ingrese un título"
           label="Título"
           sx={{ border: "none", mb: 1 }}
+          name="title"
+          value={title}
+          onChange={onInputChange}
         />
 
         <TextField
@@ -40,6 +53,9 @@ export const NoteView = () => {
           multiline
           placeholder="¿Qué sucedió en el día de hoy?"
           minRows={5}
+          name="body"
+          value={body}
+          onChange={onInputChange}
         />
       </Grid>
 
