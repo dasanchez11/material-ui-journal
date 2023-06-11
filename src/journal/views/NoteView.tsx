@@ -1,12 +1,41 @@
-import { SaveOutlined } from "@mui/icons-material";
+import { DeleteOutlined, SaveOutlined } from "@mui/icons-material";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { ImageGallery } from "../components";
 import { Note } from "../../store/models/note.model";
 import { getCurrentDate } from "../../common/utils/date.utils";
 import { useForm } from "../../hooks";
+import { useAppDispatch } from "../../store";
+import {
+  createNoteAsync,
+  deleteNoteAsync,
+  editNoteAsync,
+} from "../../store/journal/journal.thunks";
+import { useActiveNote } from "../../hooks/useActiveNote";
+import { ConfirmationDialog } from "../../common/utils/components/ConfirmationDialog";
+import { useNavigate } from "react-router-dom";
 
-export const NoteView = ({ note }: { note: Note }) => {
-  const { title, body, date, onInputChange } = useForm<Note>(note);
+export const NoteView = () => {
+  const { activeNote, newNote } = useActiveNote();
+  const { title, body, date, onInputChange, isFormValid, formState } =
+    useForm<Note>(activeNote);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleSaveClick = () => {
+    if (!isFormValid) return;
+    dispatch(editNoteAsync(formState));
+  };
+
+  const handleNewNote = () => {
+    if (!isFormValid) return;
+    dispatch(createNoteAsync(formState));
+    navigate("notes");
+  };
+
+  const handleDeleteNote = () => {
+    dispatch(deleteNoteAsync(activeNote.id));
+    navigate("notes");
+  };
 
   return (
     <Grid
@@ -27,12 +56,28 @@ export const NoteView = ({ note }: { note: Note }) => {
         </Typography>
       </Grid>
       <Grid item>
-        <Button color="primary" sx={{ padding: 2 }}>
+        <Button
+          color="primary"
+          sx={{ padding: 2 }}
+          onClick={newNote ? handleNewNote : handleSaveClick}
+        >
           <SaveOutlined sx={{ fontSize: 30, mr: 1 }} />
-          Guardar
+          Save
         </Button>
+        {!newNote && (
+          <ConfirmationDialog
+            color="error"
+            confirm={handleDeleteNote}
+            displayText="Are you Sure you want to Delete the Note ? "
+            children={
+              <>
+                <DeleteOutlined sx={{ fontSize: 30, mr: 1 }} />
+                Delete
+              </>
+            }
+          />
+        )}
       </Grid>
-
       <Grid container>
         <TextField
           type="text"

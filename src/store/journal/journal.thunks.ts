@@ -1,36 +1,42 @@
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { AppDispatch, RootState } from "..";
 import { Note } from "../models/note.model";
 import { FirebaseDB } from "../../firebase/config";
 import {
-  addNewEmptyNote,
+  createNoteFailure,
+  createNoteSatart,
+  deleteNoteFailure,
+  deleteNoteSatart,
+  deleteNoteSuccess,
+  editNoteFailure,
+  editNoteStart,
+  editNoteSuccess,
   loadNotesFailure,
   loadNotesStart,
   loadNotesSuccess,
-  savingFailure,
-  savingStart,
-  setActiveNote,
 } from "./journal.slice";
 import { loadNotes } from "../helpers/journal.helpert";
+import Swal from "sweetalert2";
 
-export const noteStartAsync = () => {
+export const createNoteAsync = (note: Omit<Note, "id">) => {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
     const { uuid } = getState().auth;
-    let newNote: Partial<Note> = {
-      title: "Diego",
-      body: "Sanchez",
-      date: new Date().getTime(),
-      imageUrls: [],
-    };
-    dispatch(savingStart());
+    dispatch(createNoteSatart());
     try {
-      dispatch(setActiveNote(newNote));
       const newDocument = doc(collection(FirebaseDB, `${uuid}/journal/notes`));
-      newNote = { ...newNote, id: newDocument.id };
+      const newNote = { ...note, id: newDocument.id };
       await setDoc(newDocument, newNote);
-      dispatch(addNewEmptyNote(newNote));
+      Swal.fire({
+        title: "Success",
+        text: "Note created successfully",
+        toast: true,
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+        position: "top-right",
+      });
     } catch (error: any) {
-      dispatch(savingFailure(error.message));
+      dispatch(createNoteFailure(error.message));
     }
   };
 };
@@ -45,6 +51,65 @@ export const loadNotesAsync = () => {
       dispatch(loadNotesSuccess(notes));
     } catch (error) {
       loadNotesFailure(error);
+    }
+  };
+};
+
+export const editNoteAsync = (editNote: Note) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { uuid } = getState().auth;
+    if (!uuid) return;
+    dispatch(editNoteStart());
+    try {
+      const existingNoteRef = doc(
+        FirebaseDB,
+        `${uuid}/journal/notes/${editNote.id}`
+      );
+      let noteResult = await getDoc(existingNoteRef);
+      if (!noteResult.data()) throw new Error("Note Not found");
+      const noteData = noteResult.data() as Note;
+      const finalEditedNote = { ...editNote, id: noteData.id };
+      await setDoc(existingNoteRef, finalEditedNote);
+      dispatch(editNoteSuccess());
+      Swal.fire({
+        title: "Success",
+        text: "Note edited successfully",
+        toast: true,
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+        position: "top-right",
+      });
+    } catch (error) {
+      dispatch(editNoteFailure(error));
+    }
+  };
+};
+
+export const deleteNoteAsync = (deleteNoteId: string) => {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { uuid } = getState().auth;
+    if (!uuid) return;
+    dispatch(deleteNoteSatart());
+    try {
+      const existingNoteRef = doc(
+        FirebaseDB,
+        `${uuid}/journal/notes/${deleteNoteId}`
+      );
+      await deleteDoc(existingNoteRef);
+      dispatch(deleteNoteSuccess());
+
+      Swal.fire({
+        title: "Success",
+        text: "Note deleted successfully",
+        toast: true,
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+        position: "top-right",
+      });
+    } catch (error) {
+      dispatch(deleteNoteFailure(error));
     }
   };
 };

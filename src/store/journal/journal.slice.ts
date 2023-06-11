@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { JournalState } from "../models/note.model";
+import { editNote } from "./note.utils";
 
 export const journalInitialState: JournalState = {
   isSaving: false,
@@ -24,33 +25,50 @@ export const journalSlice = createSlice({
       state.errors = action.payload;
       state.isSaving = false;
     },
-    addNewEmptyNote: (state, action) => {
-      state = { ...state, notes: [...state.notes, action.payload] };
-      state.isSaving = false;
-    },
-    setActiveNote: (state, action) => {
-      state.activeNote = action.payload;
-    },
-    savingStart: (state) => {
+    editNoteStart: (state) => {
       state.isSaving = true;
-      state.errors = null;
     },
-    savingFailure: (state, action) => {
+    editNoteSuccess: (state) => {
       state.isSaving = false;
-      state.errors = action.payload;
     },
-    updateNote: (state, action) => {},
-    deleteNoteById: (state, action) => {},
+    editNoteFailure: (state, action) => {
+      state.errors = action.payload;
+      state.isSaving = false;
+    },
+    createNoteSatart: (state) => {
+      state.isSaving = true;
+    },
+    createNoteSuccess: (state) => {
+      state.isSaving = false;
+    },
+    createNoteFailure: (state, action) => {
+      state.errors = action.payload;
+      state.isSaving = false;
+    },
+    deleteNoteSatart: (state) => {
+      state.isSaving = true;
+    },
+    deleteNoteSuccess: (state) => {
+      state.isSaving = false;
+    },
+    deleteNoteFailure: (state, action) => {
+      state.errors = action.payload;
+      state.isSaving = false;
+    },
   },
 });
 
 export const {
-  addNewEmptyNote,
-  setActiveNote,
   loadNotesStart,
   loadNotesSuccess,
   loadNotesFailure,
-  savingStart,
-  savingFailure,
-  updateNote,
+  editNoteStart,
+  editNoteSuccess,
+  editNoteFailure,
+  createNoteSatart,
+  createNoteSuccess,
+  createNoteFailure,
+  deleteNoteSatart,
+  deleteNoteSuccess,
+  deleteNoteFailure,
 } = journalSlice.actions;

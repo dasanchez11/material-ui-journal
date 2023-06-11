@@ -15,6 +15,11 @@ export const SidebarItem = ({ note }: { note: Note }) => {
     navigate(`/notes/${note.id}`);
   };
 
+  const title =
+    note.title.length > 17 ? note.title.slice(0, 14) + "..." : note.title;
+  const body =
+    note.body.length > 45 ? note.body.slice(0, 42) + "..." : note.body;
+
   return (
     <>
       <ListItem disablePadding onClick={handleClick}>
@@ -23,8 +28,8 @@ export const SidebarItem = ({ note }: { note: Note }) => {
             <TurnedInNot />
           </ListItemIcon>
           <Grid container>
-            <ListItemText primary={note.title} />
-            <ListItemText secondary={note.body} />
+            <ListItemText primary={title} />
+            <ListItemText secondary={body} />
           </Grid>
         </ListItemButton>
       </ListItem>

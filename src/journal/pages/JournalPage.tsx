@@ -1,23 +1,20 @@
 import { IconButton } from "@mui/material";
 import { JournalLayout } from "../layout/JournalLayout";
-import { NothingSelectedView } from "../views/NothingSelectedView";
 import { AddOutlined } from "@mui/icons-material";
 import { useAppSelector } from "../../store/hooks/useAppSelector.hook";
-import { NoteView } from "../views";
-import { useAppDispatch } from "../../store";
-import { noteStartAsync } from "../../store/journal/journal.thunks";
-import { ActiveNote } from "../components/ActiveNote";
+import { NotesRoutes } from "../router/NotesRoutes";
+import { useNavigate } from "react-router-dom";
 
 export const JournalPage = () => {
-  const { isSaving, activeNote } = useAppSelector((state) => state.journal);
-  const dispatch = useAppDispatch();
+  const { isSaving } = useAppSelector((state) => state.journal);
+  const navigate = useNavigate();
   const handleClick = () => {
-    dispatch(noteStartAsync());
+    navigate("/notes/create");
   };
 
   return (
     <JournalLayout>
-      <ActiveNote />
+      <NotesRoutes />
       <IconButton
         onClick={handleClick}
         disabled={isSaving}
