@@ -1,3 +1,13 @@
+import { FormEvent, useMemo, useState } from "react";
+import {
+  Validator,
+  useAppDispatch,
+  useAppSelector,
+  useForm,
+} from "../../common";
+import { AuthLogin } from "../models";
+import { googleLoginAsync, loginAsync } from "../store";
+import { AuthLayout } from "../layout";
 import {
   Alert,
   Button,
@@ -6,15 +16,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { AuthLayout } from "../layout/AuthLayout";
 import { Google } from "@mui/icons-material";
 import { Link as RouterLink } from "react-router-dom";
-import { Validator, useForm } from "../../hooks";
-import { FormEvent, useMemo, useState } from "react";
-import { useAppDispatch } from "../../store";
-import { googleLoginAsync, loginAsync } from "../../store/auth/auth.thunks";
-import { useAppSelector } from "../../store/hooks/useAppSelector.hook";
-import { AuthLogin } from "../models/auth.model";
 
 const validationForm: Validator<AuthLogin> = {
   email: [(value: string) => value.includes("@"), "email should haver @"],

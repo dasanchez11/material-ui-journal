@@ -1,7 +1,7 @@
 import { LogoutOutlined, MenuOutlined } from "@mui/icons-material";
 import { AppBar, Grid, IconButton, Toolbar, Typography } from "@mui/material";
-import { useAppDispatch } from "../../store";
-import { logoutAsync } from "../../store/auth/auth.thunks";
+import { logoutAsync } from "../../auth/store";
+import { useAppDispatch } from "../../common";
 
 export interface Navbar {
   drawerWidth: number;

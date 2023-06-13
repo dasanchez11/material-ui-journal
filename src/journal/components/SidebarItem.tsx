@@ -6,7 +6,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { Note } from "../../store/models/note.model";
+import { Note } from "../models/note.model";
 import { useNavigate } from "react-router-dom";
 
 export const SidebarItem = ({ note }: { note: Note }) => {

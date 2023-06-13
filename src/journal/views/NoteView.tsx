@@ -1,18 +1,22 @@
-import { DeleteOutlined, SaveOutlined } from "@mui/icons-material";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import {
+  DeleteOutlined,
+  SaveOutlined,
+  UploadOutlined,
+} from "@mui/icons-material";
+import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { ImageGallery } from "../components";
-import { Note } from "../../store/models/note.model";
+import { Note } from "../models/note.model";
 import { getCurrentDate } from "../../common/utils/date.utils";
-import { useForm } from "../../hooks";
-import { useAppDispatch } from "../../store";
 import {
   createNoteAsync,
   deleteNoteAsync,
   editNoteAsync,
-} from "../../store/journal/journal.thunks";
-import { useActiveNote } from "../../hooks/useActiveNote";
-import { ConfirmationDialog } from "../../common/utils/components/ConfirmationDialog";
+} from "../store/journal.thunks";
+import { useActiveNote } from "../hooks/useActiveNote";
+import { ConfirmationDialog } from "../../common/components/ConfirmationDialog";
 import { useNavigate } from "react-router-dom";
+import { ChangeEvent, useRef } from "react";
+import { useAppDispatch, useForm } from "../../common";
 
 export const NoteView = () => {
   const { activeNote, newNote } = useActiveNote();
@@ -20,6 +24,7 @@ export const NoteView = () => {
     useForm<Note>(activeNote);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveClick = () => {
     if (!isFormValid) return;
@@ -35,6 +40,13 @@ export const NoteView = () => {
   const handleDeleteNote = () => {
     dispatch(deleteNoteAsync(activeNote.id));
     navigate("notes");
+  };
+
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+    if (files.length > 0) {
+    }
   };
 
   return (
@@ -56,6 +68,16 @@ export const NoteView = () => {
         </Typography>
       </Grid>
       <Grid item>
+        <input
+          ref={inputRef}
+          style={{ display: "none" }}
+          type="file"
+          multiple
+          onChange={handleFileUpload}
+        />
+        <IconButton color="primary" onClick={() => inputRef.current?.click()}>
+          <UploadOutlined />
+        </IconButton>
         <Button
           color="primary"
           sx={{ padding: 2 }}

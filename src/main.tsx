@@ -4,7 +4,7 @@ import "./styles.css";
 import { JournalApp } from "./JournalApp";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import store from "./common/store/store";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

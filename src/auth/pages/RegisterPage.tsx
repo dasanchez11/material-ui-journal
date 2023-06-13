@@ -8,12 +8,11 @@ import {
 } from "@mui/material";
 import { AuthLayout } from "../layout/AuthLayout";
 import { Link as RouterLink } from "react-router-dom";
-import { Validator, useForm } from "../../hooks";
 import { FormEvent, useMemo, useState } from "react";
 import { AuthRegister } from "../models";
-import { useAppDispatch } from "../../store";
-import { registerAsync } from "../../store/auth/auth.thunks";
-import { useAppSelector } from "../../store/hooks/useAppSelector.hook";
+import { useAppSelector } from "../../common/hooks/useAppSelector.hook";
+import { Validator, useAppDispatch, useForm } from "../../common";
+import { registerAsync } from "../store";
 
 const formData = {
   password: "password",

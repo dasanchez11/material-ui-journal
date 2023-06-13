@@ -1,8 +1,8 @@
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { JournalPage } from "../pages/JournalPage";
-import { useNotes } from "../../hooks/useNotes";
+import { useNotes } from "../hooks/useNotes";
 
-export const JournalRoutes = () => {
+const JournalRoutes = () => {
   useNotes();
   return (
     <Routes>
@@ -11,3 +11,5 @@ export const JournalRoutes = () => {
     </Routes>
   );
 };
+
+export default JournalRoutes;

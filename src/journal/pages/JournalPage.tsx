@@ -1,7 +1,7 @@
 import { IconButton } from "@mui/material";
 import { JournalLayout } from "../layout/JournalLayout";
 import { AddOutlined } from "@mui/icons-material";
-import { useAppSelector } from "../../store/hooks/useAppSelector.hook";
+import { useAppSelector } from "../../common/hooks/useAppSelector.hook";
 import { NotesRoutes } from "../router/NotesRoutes";
 import { useNavigate } from "react-router-dom";
 
